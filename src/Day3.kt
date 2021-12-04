@@ -20,8 +20,20 @@ fun main() {
         println(gamma.toInt(2) * epsilon.toInt(2))
     }
 
-    fun puzzle2(input: List<String>) {
+    fun search(input: List<String>, index: Int, comparison: (List<String>, List<String>) -> Boolean): String {
+        if (input.size == 1) {
+            return input.first()
+        }
 
+        val (list0, list1) = input.partition { it[index] == '0' }
+        return search(if (comparison(list0, list1)) list0 else list1, index + 1, comparison)
+    }
+
+    fun puzzle2(input: List<String>) {
+        val generator = search(input, 0) { a, b -> a.size > b.size }
+        val scrubber = search(input, 0) { a, b -> a.size <= b.size }
+
+        println(generator.toInt(2) * scrubber.toInt(2))
     }
 
     val input = readInput("day3_input")
